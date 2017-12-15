@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "cn.laoma.dao.IUserDao">
+    <resultMap id="BaseResultMap" type="cn.laoma.domain.User">
+        <result column="id" jdbcType="INTEGER" property="id"></result>
+        <result column="username" jdbcType="VARCHAR" property="username"></result>
+        <result column="password" jdbcType="VARCHAR" property="password"></result>
+        <result column="gender" jdbcType="SMALLINT" property="gender"></result>
+        <result column="creatTime" jdbcType="BIGINT" property="long"></result>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.laoma.domain.User">
+        insert into user(username,password,gender,status,creatTime)
+        values(#{username},#{password},#{gender},#{status},#{creatTime})
+    </insert>
+
+
+</mapper>

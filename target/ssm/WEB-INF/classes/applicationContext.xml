@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--spring的配置文件，这里主要配置和业务逻辑有关-->
+    <!--配置数据源，spring与mybatis的整合，事务管理-->
+
+    <context:component-scan base-package="cn.laoma">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
+    </context:component-scan>
+
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${jdbc.url}"></property>
+        <property name="driverClass" value="${jdbc.dirver}"></property>
+        <property name="user" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--配置与mybatis的整合-->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+       <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+        <property name="dataSource" ref="pooledDataSource"></property>
+    </bean>
+    <!--配置扫描器，将mybatis的接口实现加入到IOC容器中-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--扫描所有dao接口的实现，加入到IOC容器中-->
+        <property name="basePackage" value="cn.laoma.dao"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"></property>
+    </bean>
+
+    <!--配置事务控制-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       <!--控制住数据源-->
+        <property name="dataSource" ref="pooledDataSource"></property>
+    </bean>
+    <!--开启基于注解的事务，必要的主要的使用xml配置-->
+    <aop:config>
+        <!--切入点表达式-->
+        <aop:pointcut id="txPoint" expression="execution(public * cn.laoma.serviceImpl..*(..))"/>
+        <!--配置事务增强-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>
+    </aop:config>
+    <!--配置事务增强，事务如何切入-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!--所有方法都是事务管理-->
+            <tx:method name="*"/>
+            <!--所有以get开始的方法-->
+            <tx:method name="get*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+
+</beans>
