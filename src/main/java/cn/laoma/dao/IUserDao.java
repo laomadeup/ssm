@@ -10,9 +10,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IUserDao {
 
-    public int insert(User user);
+     int insert(User user);
 
-    public User getUserById(@Param(value = "id")Integer id);
+     User getUserById(@Param(value = "id")Integer id);
+
+    int updateUserById(User user);
+
 
 
 }

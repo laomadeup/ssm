@@ -18,6 +18,12 @@ public interface IUserService{
     * 根据用户Id获取用户
     * */
     public User getUserById(Integer id);
+    /*
+    *
+    * 根据用户id修改用户信息
+    * */
+    boolean updateUserByid(User user);
+
 
 
 }
