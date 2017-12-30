@@ -75,7 +75,31 @@ public class UserServiceImpl implements IUserService{
     }
 
 
+    public boolean updateUserByid(User user) {
 
+        if(user == null){
+            throw new RuntimeException("传入参数为空!");
+        }
+        if(user.getId() == null){
+            throw new RuntimeException("用户id为空!");
+        }
+        if(StringUtils.isEmpty(user.getUsername())){
+            throw new RuntimeException("用户姓名为空!");
+        }
+        if(StringUtils.isEmpty(user.getPassword())){
+            throw new RuntimeException("用户密码为空!");
+        }
+        if(user.getGender() == null){
+            throw new RuntimeException("用户性别为空!");
+        }
+        if(user.getStatus() == null){
+            user.setStatus(Short.parseShort("1"));
+        }
 
-
+        int result = userDao.updateUserById(user);
+        if(result >0){
+            return true;
+        }
+        return false;
+    }
 }

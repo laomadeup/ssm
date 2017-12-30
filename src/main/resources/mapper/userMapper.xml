@@ -24,5 +24,18 @@
 
     </select>
 
+    <update id="updateUserById" parameterType="cn.laoma.domain.User" >
+      UPDATE  USER  SET  username=#{username,jdbcType=VARCHAR},password = #{password,jdbcType=VARCHAR},
+        gender = #{gender,jdbcType=SMALLINT},status=#{status,jdbcType=SMALLINT}
+        <if test="id != null">
+         <where>
+              id = #{id,jdbcType=INTEGER}
+          </where>
+        </if>
+    </update>
+
+
+
+
 
 </mapper>
