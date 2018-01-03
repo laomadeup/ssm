@@ -188,12 +188,27 @@ CREATE TABLE lmxz_mission (
   id SMALLINT(15) PRIMARY KEY auto_increment,
 	title VARCHAR(100) COMMENT '标题',
   content text COMMENT '内容',
+	maxsize INT COMMENT '任务最大值（上限）',
   createTime DATETIME COMMENT '创建时间',
   startTime DATETIME COMMENT '开始时间',
   endTime DATETIME COMMENT '结束时间',
   achieveType SMALLINT(5) COMMENT '达成类型',
 	iscomplete SMALLINT(5) COMMENT '任务是否完成'
 );
+
+/*
+任务进度表
+*/
+DROP TABLE IF EXISTS lmxz_mission_progress;
+CREATE TABLE lmxz_mission_progress(
+	id SMALLINT(15) PRIMARY KEY auto_increment,
+	userId SMALLINT(15) COMMENT '用户id,外键',
+	missionId SMALLINT(15) COMMENT '任务id，外键',
+	maxsize	INT	COMMENT '任务最大值（上限,任务表中的值）',
+	currentsize INT COMMENT '当前任务',
+	createTime DATETIME COMMENT '接任务时间'
+);
+
 
 /*
 角色表
